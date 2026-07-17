@@ -1,10 +1,16 @@
-    # DevOps with Kubernetes
+# DevOps with Kubernetes
 
 University of Helsinki - DevOps with Kubernetes 2026
 
+## Exercises
+
+### Chapter 2
+
+- [1.1](https://github.com/olekacak/kubernetes/tree/1.1/log-output)
+
 ## Project Structure
 
-```
+```text
 log-output/
 todo-app/
 ```
