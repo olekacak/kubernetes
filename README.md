@@ -32,6 +32,9 @@ University of Helsinki - DevOps with Kubernetes 2026
 - [2.9](https://github.com/olekacak/kubernetes/tree/2.9)
 - [2.10](https://github.com/olekacak/kubernetes/tree/2.10)
 
+### Chapter 4
+- [3.1](https://github.com/olekacak/kubernetes/tree/3.1)
+
 ## Project Structure
 
 ```text
