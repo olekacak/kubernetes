@@ -4,8 +4,8 @@ namespace App\Services;
 
 class LogOutputService
 {
-    private string $outputPath = '/shared/output.txt';
-    private string $pingsPath  = '/shared/pings.txt';
+    private string $outputPath  = '/shared/output.txt';
+    private string $pingPongUrl = 'http://ping-pong-svc/pings';
 
     public function status(): string
     {
@@ -13,9 +13,8 @@ class LogOutputService
             ? file_get_contents($this->outputPath)
             : 'Waiting for log output...';
 
-        $pings = file_exists($this->pingsPath)
-            ? (int) file_get_contents($this->pingsPath)
-            : 0;
+        $pings = @file_get_contents($this->pingPongUrl);
+        $pings = ($pings !== false) ? (int) $pings : 0;
 
         return $output . "\nPing / Pongs: {$pings}";
     }
