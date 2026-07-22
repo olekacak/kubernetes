@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todo-wiki-reminder
+  namespace: project
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: todo-generator
+              image: curlimages/curl:latest
+              command:
+                - sh
+                - -c
+                - |
+                  URL=$(curl -Ls -o /dev/null -w '%{url_effective}' https://en.wikipedia.org/wiki/Special:Random)
+                  curl -X POST http://todo-backend-svc/todos \
+                    -H 'Content-Type: application/json' \
+                    -d "{\"content\": \"Read $URL\"}"
+          restartPolicy: OnFailure
