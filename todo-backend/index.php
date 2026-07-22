@@ -30,6 +30,7 @@ if ($method === 'GET' && $path === '/todos') {
     $content = trim($body['content'] ?? '');
 
     if ($content === '' || mb_strlen($content) > 140) {
+        error_log(sprintf("REJECTED todo (length=%d): %s", mb_strlen($content), $content));
         http_response_code(400);
         echo json_encode(['error' => 'Content must be 1-140 characters']);
         exit;
@@ -37,6 +38,8 @@ if ($method === 'GET' && $path === '/todos') {
 
     $stmt = $pdo->prepare("INSERT INTO todos (content) VALUES (?)");
     $stmt->execute([$content]);
+
+    error_log(sprintf("CREATED todo (length=%d): %s", mb_strlen($content), $content));
 
     http_response_code(201);
     echo json_encode(['status' => 'created', 'todo' => $content]);
