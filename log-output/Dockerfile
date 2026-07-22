@@ -22,5 +22,5 @@ RUN composer install \
     --no-dev \
     --optimize-autoloader
 
-# Start the application
-CMD ["sh", "-c", "php artisan log:output & php artisan serve --host=0.0.0.0 --port=8000"]
+# Default command (overridden per container in k8s)
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

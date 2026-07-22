@@ -2,24 +2,16 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Str;
-
 class LogOutputService
 {
-    private string $random;
+    private string $path = '/shared/output.txt';
 
-    public function __construct()
+    public function status(): string
     {
-        $this->random = Str::uuid()->toString();
-    }
+        if (!file_exists($this->path)) {
+            return 'Waiting for log output...';
+        }
 
-    public function status(): array
-    {
-        return [
-            'timestamp' => now()
-                ->utc()
-                ->format('Y-m-d\TH:i:s.v\Z'),
-            'random' => $this->random,
-        ];
+        return file_get_contents($this->path);
     }
 }
