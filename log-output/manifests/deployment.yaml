@@ -25,7 +25,7 @@ spec:
 
       containers:
         - name: log-writer
-          image: olekacak/log-output:2.5
+          image: olekacak/log-output:2.6
           imagePullPolicy: Always
           command: ["php", "artisan", "log:output"]
           volumeMounts:
@@ -33,7 +33,7 @@ spec:
               mountPath: /shared
 
         - name: log-reader
-          image: olekacak/log-output:2.5
+          image: olekacak/log-output:2.6
           imagePullPolicy: Always
           command: ["sh", "-c", "php -S 0.0.0.0:8000 -t public"]
           ports:

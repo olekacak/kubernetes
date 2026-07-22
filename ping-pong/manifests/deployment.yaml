@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: olekacak/ping-pong:2.8
+          image: olekacak/ping-pong:2.9
           imagePullPolicy: Always
           command: ["sh", "-c", "php -S 0.0.0.0:8000 -t public"]
 
