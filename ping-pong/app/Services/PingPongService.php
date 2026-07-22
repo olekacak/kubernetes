@@ -2,23 +2,40 @@
 
 namespace App\Services;
 
+use PDO;
+use PDOException;
+
 class PingPongService
 {
-    private string $path = '/tmp/pings.txt';
+    private PDO $pdo;
+
+    public function __construct()
+    {
+        $host = getenv('POSTGRES_HOST') ?: 'postgres-svc';
+        $db   = getenv('POSTGRES_DB')   ?: 'pingpong';
+        $user = getenv('POSTGRES_USER') ?: 'postgres';
+        $pass = getenv('POSTGRES_PASSWORD') ?: '';
+
+        $this->pdo = new PDO("pgsql:host={$host};dbname={$db}", $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        ]);
+
+        $this->pdo->exec("CREATE TABLE IF NOT EXISTS pings (id SERIAL PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)");
+
+        $row = $this->pdo->query("SELECT COUNT(*) FROM pings")->fetchColumn();
+        if ((int) $row === 0) {
+            $this->pdo->exec("INSERT INTO pings (count) VALUES (0)");
+        }
+    }
 
     public function ping(): string
     {
-        $count = $this->count() + 1;
-
-        file_put_contents($this->path, $count);
-
-        return "pong {$count}";
+        $this->pdo->exec("UPDATE pings SET count = count + 1");
+        return "pong " . $this->count();
     }
 
     public function count(): int
     {
-        return file_exists($this->path)
-            ? (int) file_get_contents($this->path)
-            : 0;
+        return (int) $this->pdo->query("SELECT count FROM pings LIMIT 1")->fetchColumn();
     }
 }

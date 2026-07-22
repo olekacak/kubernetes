@@ -20,12 +20,19 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: olekacak/ping-pong:2.1
+          image: olekacak/ping-pong:2.7
           imagePullPolicy: Always
+          command: ["sh", "-c", "php -S 0.0.0.0:8000 -t public"]
 
           env:
-            - name: PORT
-              value: "8000"
+            - name: POSTGRES_HOST
+              value: "postgres-svc"
+            - name: POSTGRES_DB
+              value: "pingpong"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "password"
 
           ports:
             - containerPort: 8000
