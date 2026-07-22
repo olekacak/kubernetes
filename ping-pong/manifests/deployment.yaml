@@ -17,9 +17,14 @@ spec:
         app: ping-pong
 
     spec:
+      volumes:
+        - name: shared-pv
+          persistentVolumeClaim:
+            claimName: shared-pvc
+
       containers:
         - name: ping-pong
-          image: olekacak/ping-pong:1.9
+          image: olekacak/ping-pong:1.11
           imagePullPolicy: Always
 
           env:
@@ -28,3 +33,7 @@ spec:
 
           ports:
             - containerPort: 8000
+
+          volumeMounts:
+            - name: shared-pv
+              mountPath: /shared

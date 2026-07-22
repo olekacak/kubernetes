@@ -4,10 +4,18 @@ namespace App\Services;
 
 class PingPongService
 {
-    private static int $counter = 0;
+    private string $path = '/shared/pings.txt';
 
     public function ping(): string
     {
-        return "pong " . self::$counter++;
+        $count = file_exists($this->path)
+            ? (int) file_get_contents($this->path)
+            : 0;
+
+        $count++;
+
+        file_put_contents($this->path, $count);
+
+        return "pong {$count}";
     }
 }
