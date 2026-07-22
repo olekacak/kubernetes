@@ -22,6 +22,7 @@ University of Helsinki - DevOps with Kubernetes 2026
 
 ### Chapter 3
 - [2.1](https://github.com/olekacak/kubernetes/tree/2.1/ping-pong)
+- [2.2](https://github.com/olekacak/kubernetes/tree/2.2/todo-backend)
 
 ## Project Structure
 

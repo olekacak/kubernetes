@@ -83,9 +83,11 @@
 
         <h2>Todos</h2>
         <div class="todo-list">
-            <div class="todo-item">Learn Kubernetes basics</div>
-            <div class="todo-item">Deploy application to cluster</div>
-            <div class="todo-item">Configure persistent volumes</div>
+            @forelse ($todos as $todo)
+                <div class="todo-item">{{ $todo }}</div>
+            @empty
+                <div class="todo-item" style="color:#999">No todos yet. Add one above!</div>
+            @endforelse
         </div>
     </div>
 </body>
