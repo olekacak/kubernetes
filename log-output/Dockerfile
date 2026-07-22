@@ -23,4 +23,4 @@ RUN composer install \
     --optimize-autoloader
 
 # Start the application
-CMD ["php", "artisan", "log:output"]
+CMD ["sh", "-c", "php artisan log:output & php artisan serve --host=0.0.0.0 --port=8000"]
