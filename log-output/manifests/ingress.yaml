@@ -5,9 +5,20 @@ metadata:
   name: log-output-ingress
 
 spec:
+  ingressClassName: traefik
+
   rules:
     - http:
         paths:
+
+          - path: /pingpong
+            pathType: Prefix
+            backend:
+              service:
+                name: ping-pong-svc
+                port:
+                  number: 80
+
           - path: /
             pathType: Prefix
             backend:
