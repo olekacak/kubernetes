@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Services\ImageService;
 
-define('TODO_BACKEND', 'http://todo-backend-svc/todos');
+define('TODO_BACKEND', getenv('TODO_BACKEND_URL') ?: 'http://todo-backend-svc/todos');
 
 Route::get('/', function (ImageService $service) {
     $service->imagePath();

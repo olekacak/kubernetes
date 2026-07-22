@@ -24,12 +24,16 @@ spec:
 
       containers:
         - name: todo-app
-          image: olekacak/todo-app:2.2
+          image: olekacak/todo-app:2.6
           imagePullPolicy: Always
+          command: ["sh", "-c", "php -S 0.0.0.0:8000 -t public"]
 
           env:
-            - name: PORT
-              value: "8000"
+            - name: TODO_BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-app-config
+                  key: TODO_BACKEND_URL
 
           ports:
             - containerPort: 8000

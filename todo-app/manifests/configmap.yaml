@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-app-config
+  namespace: project
+data:
+  TODO_BACKEND_URL: "http://todo-backend-svc/todos"
