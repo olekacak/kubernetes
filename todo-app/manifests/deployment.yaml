@@ -23,7 +23,7 @@ spec:
 
       containers:
         - name: todo-app
-          image: olekacak/todo-app:1.12
+          image: olekacak/todo-app:1.13
           imagePullPolicy: Always
 
           env:
