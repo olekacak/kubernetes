@@ -2,13 +2,28 @@
 
 header('Content-Type: application/json');
 
-$file   = '/tmp/todos.json';
-$todos  = file_exists($file) ? json_decode(file_get_contents($file), true) : [];
+$host   = getenv('POSTGRES_HOST')     ?: 'postgres-svc';
+$db     = getenv('POSTGRES_DB')       ?: 'todos';
+$user   = getenv('POSTGRES_USER')     ?: 'postgres';
+$pass   = getenv('POSTGRES_PASSWORD') ?: '';
+
+try {
+    $pdo = new PDO("pgsql:host={$host};dbname={$db}", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    ]);
+    $pdo->exec("CREATE TABLE IF NOT EXISTS todos (id SERIAL PRIMARY KEY, content TEXT NOT NULL)");
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'DB connection failed: ' . $e->getMessage()]);
+    exit;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 if ($method === 'GET' && $path === '/todos') {
-    echo json_encode($todos);
+    $rows = $pdo->query("SELECT content FROM todos ORDER BY id")->fetchAll(PDO::FETCH_COLUMN);
+    echo json_encode($rows);
 
 } elseif ($method === 'POST' && $path === '/todos') {
     $body    = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -20,8 +35,8 @@ if ($method === 'GET' && $path === '/todos') {
         exit;
     }
 
-    $todos[] = $content;
-    file_put_contents($file, json_encode($todos));
+    $stmt = $pdo->prepare("INSERT INTO todos (content) VALUES (?)");
+    $stmt->execute([$content]);
 
     http_response_code(201);
     echo json_encode(['status' => 'created', 'todo' => $content]);
