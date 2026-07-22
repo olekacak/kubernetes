@@ -16,10 +16,16 @@ spec:
       volumes:
         - name: shared-logs
           emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: log-output-config
+            items:
+              - key: information.txt
+                path: information.txt
 
       containers:
         - name: log-writer
-          image: olekacak/log-output:2.1
+          image: olekacak/log-output:2.5
           imagePullPolicy: Always
           command: ["php", "artisan", "log:output"]
           volumeMounts:
@@ -27,11 +33,19 @@ spec:
               mountPath: /shared
 
         - name: log-reader
-          image: olekacak/log-output:2.1
+          image: olekacak/log-output:2.5
           imagePullPolicy: Always
-          command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+          command: ["sh", "-c", "php -S 0.0.0.0:8000 -t public"]
           ports:
             - containerPort: 8000
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-config
+                  key: MESSAGE
           volumeMounts:
             - name: shared-logs
               mountPath: /shared
+            - name: config-volume
+              mountPath: /config
